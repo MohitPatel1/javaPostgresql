@@ -55,17 +55,27 @@ public class myProject {
             }
             // ask what do they want to do?
             Scanner scanner = new Scanner(System.in);
-            System.out.println("type update, to perform the task");
-            String user_input = scanner.nextLine();
-            if(user_input.equals("update")){
-                System.out.println("Enter index you want to update");
-                int updateIndex = scanner.nextInt();
-                scanner.nextLine();
-                System.out.println("Write the updated question");
-                String updatedQuestion = scanner.nextLine();
-                updateQuestion(connection,updateIndex,updatedQuestion);
-            }else{
-                System.out.println("false");
+            int exit = 1;
+            while(exit == 1) {
+                System.out.println("type update/ add to perform the task. Hit enter to exit");
+                String user_input = scanner.nextLine();
+                switch (user_input) {
+                    case "update":
+                        System.out.println("Enter index you want to update");
+                        int updateIndex = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.println("Write the updated question");
+                        String updatedQuestion = scanner.nextLine();
+                        updateQuestion(connection, updateIndex, updatedQuestion);
+                        break;
+                    case "add":
+                        break;
+                    case "":
+                        exit = 0;
+                        break;
+                    default:
+                        System.out.println("invalid input");
+                }
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -74,6 +84,7 @@ public class myProject {
 
     private  static void updateQuestion(Connection connection, int index, String question) throws Exception {
         try{
+
             System.out.println(index);
             System.out.println(question);
         }catch (Exception e){
@@ -81,4 +92,14 @@ public class myProject {
 
         }
     }
+
+    private  static void addQuestion(Connection connection, String question) throws Exception {
+        try{
+            System.out.println(question);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+
+        }
+    }
+
 }
