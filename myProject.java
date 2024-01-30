@@ -58,16 +58,27 @@ public class myProject {
             System.out.println("type update, to perform the task");
             String user_input = scanner.nextLine();
             if(user_input.equals("update")){
-                System.out.println("true");
+                System.out.println("Enter index you want to update");
+                int updateIndex = scanner.nextInt();
+                scanner.nextLine();
+                System.out.println("Write the updated question");
+                String updatedQuestion = scanner.nextLine();
+                updateQuestion(connection,updateIndex,updatedQuestion);
             }else{
                 System.out.println("false");
             }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
 
-//    private  static void updateQuestion(Connection connection) throws SQLException {
-//        try{
-//
-//        }
-//    }
+    private  static void updateQuestion(Connection connection, int index, String question) throws Exception {
+        try{
+            System.out.println(index);
+            System.out.println(question);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+
+        }
+    }
 }
