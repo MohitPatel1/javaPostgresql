@@ -1,10 +1,6 @@
 import java.io.BufferedInputStream;
 import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Scanner;
 
 public class myProject {
@@ -13,6 +9,12 @@ public class myProject {
     private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/postgres";
     private static final String USER = "mohit";
     private static final String PASSWORD = "mohit";
+
+    private static final String TABLE_NAME = "not_psych";
+
+    private static final String QUESTION_COLUMN = "question";
+
+    private static final String INDEX_COLUMN = "serial_no";
 
     public static void main(String[] args) {
         Connection connection = null;
@@ -49,8 +51,8 @@ public class myProject {
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 // Process the result set
-                int id = resultSet.getInt("index");
-                String name = resultSet.getString("questions");
+                int id = resultSet.getInt(INDEX_COLUMN);
+                String name = resultSet.getString(QUESTION_COLUMN);
                 System.out.println("ID: " + id + ", Name: " + name);
             }
             // ask what do they want to do?
@@ -69,6 +71,9 @@ public class myProject {
                         updateQuestion(connection, updateIndex, updatedQuestion);
                         break;
                     case "add":
+                        System.out.println("Enter the question you want to add");
+                        String addQuestion = scanner.nextLine();
+                        addQuestion(connection, addQuestion);
                         break;
                     case "":
                         exit = 0;
@@ -84,18 +89,32 @@ public class myProject {
 
     private  static void updateQuestion(Connection connection, int index, String question) throws Exception {
         try{
-
-            System.out.println(index);
-            System.out.println(question);
+            String updateQuery = "update " + TABLE_NAME +" set " + QUESTION_COLUMN + " = ? where "+ INDEX_COLUMN + " = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
+            preparedStatement.setString(1,question);
+            preparedStatement.setInt(2,index);
+            int rowsUpdated = preparedStatement.executeUpdate();
+            System.out.println(preparedStatement);
+            System.out.println(rowsUpdated);
         }catch (Exception e){
             System.out.println(e.getMessage());
-
         }
     }
 
     private  static void addQuestion(Connection connection, String question) throws Exception {
         try{
-            System.out.println(question);
+            String addQuestion = "INSERT INTO " + TABLE_NAME +"(" + QUESTION_COLUMN + ") VALUES(\'"+ question + "\')";
+            System.out.println(addQuestion);
+            try(Statement addQuery = connection.createStatement()){
+                int questionsAdded = addQuery.executeUpdate(addQuestion);
+                if(questionsAdded > 0) {
+                    System.out.println(questionsAdded + " question added");
+                }else{
+                    System.out.println("error in adding question");
+                }
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         }catch (Exception e){
             System.out.println(e.getMessage());
 
