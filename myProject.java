@@ -1,8 +1,11 @@
+import java.io.BufferedInputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class myProject {
 
@@ -25,7 +28,7 @@ public class myProject {
             performDatabaseOperations(connection);
 
         } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("database not connected");
+            System.out.println("database not connected: "+ e.getMessage());
             e.printStackTrace();
         } finally {
             // Close the connection in the finally block to ensure it's always closed
@@ -44,13 +47,27 @@ public class myProject {
         String query = "SELECT * FROM not_psych";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
-
             while (resultSet.next()) {
                 // Process the result set
                 int id = resultSet.getInt("index");
                 String name = resultSet.getString("questions");
                 System.out.println("ID: " + id + ", Name: " + name);
             }
+            // ask what do they want to do?
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("type update, to perform the task");
+            String user_input = scanner.nextLine();
+            if(user_input.equals("update")){
+                System.out.println("true");
+            }else{
+                System.out.println("false");
+            }
         }
     }
+
+//    private  static void updateQuestion(Connection connection) throws SQLException {
+//        try{
+//
+//        }
+//    }
 }
